@@ -75,6 +75,11 @@ class Homestead
         s.path = "./scripts/create-postgres.sh"
         s.args = [db]
       end
+
+      config.vm.provision "shell" do |s|
+        s.path = "./scripts/create-oracle.sh"
+        s.args = [db]
+      end
     end
 
     # Configure All Of The Server Environment Variables
