@@ -10,6 +10,10 @@ aliasesPath = File.expand_path("./config/aliases")
 require_relative 'scripts/homestead.rb'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+	config.ssh.username = "vagrant"
+	config.ssh.password = "vagrant"
+
 	if File.exists? aliasesPath then
 		config.vm.provision "file", source: aliasesPath, destination: "~/.bash_aliases"
 	end
