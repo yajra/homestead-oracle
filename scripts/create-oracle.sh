@@ -12,15 +12,7 @@ set feedback off
 set heading off
 
 DROP USER ${DB} CASCADE;
-CREATE USER ${DB} IDENTIFIED BY secret;
-
-GRANT create session TO ${DB};
-GRANT create table TO ${DB};
-GRANT create view TO ${DB};
-GRANT create any trigger TO ${DB};
-GRANT create any procedure TO ${DB};
-GRANT create sequence TO ${DB};
-GRANT create synonym TO ${DB};
+GRANT ALL PRIVILEGES TO ${DB} IDENTIFIED BY secret;
 
 COMMIT
 
