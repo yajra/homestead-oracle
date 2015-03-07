@@ -2,6 +2,17 @@
 
 Official Laravel Homestead documentation [is located here](http://laravel.com/docs/homestead?version=4.2).
 
+## Homestead Oracle Box Installation
+1. Manually import `homestead-oracle.box` into vagrant using:
+  - open terminal
+  - execute `$ vagrant box add /path/to/homestead-oracle.box --name=yajra/homestead-oracle`
+2. Create a `www` directory on your root folder.
+  - `$ cd /`
+  - `$ sudo mkdir www`
+2. Change dir to homestead-oracle folder then `vagrant up`
+  - `$ cd /path/to/homestead-oracle`
+  - `$ vagrant up`
+
 ## Oracle Default Accounts
 - sys / secret
 - system / secret
