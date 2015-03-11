@@ -1,6 +1,6 @@
 {
-    "name": "laravel/homestead",
-    "description": "A virtual machine for web artisans.",
+    "name": "yajra/homestead-oracle",
+    "description": "A virtual machine for oracle web artisans.",
     "require": {
         "php": ">=5.4",
         "symfony/console": "~2.0",
@@ -11,6 +11,10 @@
         {
             "name": "Taylor Otwell",
             "email": "taylorotwell@gmail.com"
+        },
+        {
+            "name": "Arjay Angeles",
+            "email": "aqangeles@gmail.com"
         }
     ],
     "autoload": {
