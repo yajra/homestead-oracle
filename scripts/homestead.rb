@@ -1,5 +1,8 @@
 class Homestead
   def Homestead.configure(config, settings)
+    # Set The VM Provider
+    ENV['VAGRANT_DEFAULT_PROVIDER'] = settings["provider"] ||= "virtualbox"
+
     # Configure The Box
     config.vm.box = "yajra/homestead-oracle"
     config.vm.hostname = "homestead"
@@ -17,6 +20,12 @@ class Homestead
       vb.customize ["modifyvm", :id, "--ostype", "Ubuntu_64"]
     end
 
+    config.vm.provider "vmware_fusion" do |v|
+      v.name = 'homestead-oracle'
+      v.memory = settings["memory"] ||= "2048"
+      v.cpus = settings["cpus"] ||= "1"
+    end
+
     # Configure Port Forwarding To The Box
     config.vm.network "forwarded_port", guest: 80, host: 8000
     config.vm.network "forwarded_port", guest: 443, host: 44300
@@ -32,17 +41,21 @@ class Homestead
     end
 
     # Configure The Public Key For SSH Access
-    config.vm.provision "shell" do |s|
-      s.inline = "echo $1 | grep -xq \"$1\" /home/vagrant/.ssh/authorized_keys || echo $1 | tee -a /home/vagrant/.ssh/authorized_keys"
-      s.args = [File.read(File.expand_path(settings["authorize"]))]
+    if settings.include? 'authorize'
+      config.vm.provision "shell" do |s|
+        s.inline = "echo $1 | grep -xq \"$1\" /home/vagrant/.ssh/authorized_keys || echo $1 | tee -a /home/vagrant/.ssh/authorized_keys"
+        s.args = [File.read(File.expand_path(settings["authorize"]))]
+      end
     end
 
     # Copy The SSH Private Keys To The Box
-    settings["keys"].each do |key|
-      config.vm.provision "shell" do |s|
-        s.privileged = false
-        s.inline = "echo \"$1\" > /home/vagrant/.ssh/$2 && chmod 600 /home/vagrant/.ssh/$2"
-        s.args = [File.read(File.expand_path(key)), key.split('/').last]
+    if settings.include? 'keys'
+      settings["keys"].each do |key|
+        config.vm.provision "shell" do |s|
+          s.privileged = false
+          s.inline = "echo \"$1\" > /home/vagrant/.ssh/$2 && chmod 600 /home/vagrant/.ssh/$2"
+          s.args = [File.read(File.expand_path(key)), key.split('/').last]
+        end
       end
     end
 
@@ -56,10 +69,10 @@ class Homestead
       config.vm.provision "shell" do |s|
           if (site.has_key?("hhvm") && site["hhvm"])
             s.inline = "bash /vagrant/scripts/serve-hhvm.sh $1 \"$2\" $3"
-            s.args = [site["map"], site["to"], site["port"] ||= 80]
+            s.args = [site["map"], site["to"], site["port"] ||= "80"]
           else
             s.inline = "bash /vagrant/scripts/serve.sh $1 \"$2\" $3"
-            s.args = [site["map"], site["to"], site["port"] ||= 80]
+            s.args = [site["map"], site["to"], site["port"] ||= "80"]
           end
       end
     end
@@ -110,7 +123,7 @@ class Homestead
     if settings.has_key?("blackfire")
       config.vm.provision "shell" do |s|
         s.path = "./scripts/blackfire.sh"
-        s.args = [settings["blackfire"]["id"], settings["blackfire"]["token"]]
+        s.args = [settings["blackfire"][0]["id"], settings["blackfire"][0]["token"]]
       end
     end
   end
