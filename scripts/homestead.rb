@@ -12,7 +12,7 @@ class Homestead
 
     # Configure A Few VirtualBox Settings
     config.vm.provider "virtualbox" do |vb|
-      vb.name = 'vm-oracle'
+      vb.name = 'homestead-oracle'
       vb.customize ["modifyvm", :id, "--memory", settings["memory"] ||= "2048"]
       vb.customize ["modifyvm", :id, "--cpus", settings["cpus"] ||= "1"]
       vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
@@ -21,7 +21,7 @@ class Homestead
     end
 
     config.vm.provider "vmware_fusion" do |v|
-      v.name = 'vm-oracle'
+      v.name = 'homestead-oracle'
       v.memory = settings["memory"] ||= "2048"
       v.cpus = settings["cpus"] ||= "1"
     end
