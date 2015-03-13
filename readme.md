@@ -1,17 +1,39 @@
 ## Laravel Homestead with Oracle XE 11g
+This project enables you to install Oracle 11g XE on Laravel's Homestead [base box](https://atlas.hashicorp.com/laravel/boxes/homestead), using
+[Vagrant] and [Puppet].
 
-Official Laravel Homestead documentation [is located here](http://laravel.com/docs/homestead?version=4.2).
+## Acknowledgements
+This project was created based on the information in the following projects:
 
-## Homestead Oracle Box Installation
-1. Manually import `homestead-oracle.box` into vagrant using:
-  - open terminal
-  - execute `$ vagrant box add /path/to/homestead-oracle.box --name=yajra/homestead-oracle`
-2. Create a `www` directory on your root folder.
-  - `$ cd /`
-  - `$ sudo mkdir www`
-2. Change dir to homestead-oracle folder then `vagrant up`
-  - `$ cd /path/to/homestead-oracle`
-  - `$ vagrant up`
+* [Oracle XE 11g on Ubuntu 12.04 using Vagrant](https://github.com/hilverd/vagrant-ubuntu-oracle-xe)
+* [Laravel Homestead](https://github.com/laravel/homestead)
+
+## Requirements
+
+* You need to have [Vagrant] installed.
+* The host machine probably needs at least 4 GB of RAM (I have only tested 8 GB of RAM).
+* As Oracle 11g XE is only available for 64-bit machines at the moment, the host machine needs to
+  have a 64-bit architecture.
+* You may need to [enable virtualization] manually.
+
+## Installation
+
+* Check out this project:
+
+        git clone https://github.com/yajra/homestead-oracle.git
+
+* Install [vbguest]:
+
+        vagrant plugin install vagrant-vbguest
+
+* Download [Oracle Database 11g Express Edition] for Linux x64. Place the file
+  `oracle-xe-11.2.0-1.0.x86_64.rpm.zip` in the directory `puppet/modules/oracle/files` of this
+  project. (Alternatively, you could keep the zip file in some other location and make a hard link
+  to it from `puppet/modules/oracle/files`.)
+
+* Run `vagrant up` from the base directory of this project. The first time this will take a while -- up to 1 hour on
+  my machine. Please note that building the VM involves downloading Laravel's Homestead [base box](https://atlas.hashicorp.com/laravel/boxes/homestead)
+
 
 ## Oracle Default Accounts
 - sys / secret
