@@ -4,7 +4,7 @@ class Homestead
     ENV['VAGRANT_DEFAULT_PROVIDER'] = settings["provider"] ||= "virtualbox"
 
     # Configure The Box
-    config.vm.box = "yajra/homestead-oracle"
+    config.vm.box = "laravel/homestead"
     config.vm.hostname = "homestead"
 
     # Configure A Private Network IP
@@ -12,7 +12,7 @@ class Homestead
 
     # Configure A Few VirtualBox Settings
     config.vm.provider "virtualbox" do |vb|
-      vb.name = 'homestead-oracle'
+      vb.name = 'vm-oracle'
       vb.customize ["modifyvm", :id, "--memory", settings["memory"] ||= "2048"]
       vb.customize ["modifyvm", :id, "--cpus", settings["cpus"] ||= "1"]
       vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
@@ -21,9 +21,31 @@ class Homestead
     end
 
     config.vm.provider "vmware_fusion" do |v|
-      v.name = 'homestead-oracle'
+      v.name = 'vm-oracle'
       v.memory = settings["memory"] ||= "2048"
       v.cpus = settings["cpus"] ||= "1"
+    end
+
+    # enable/disable vbguest update
+    config.vbguest.auto_update = false
+
+    # set date/time
+    config.vm.provision :shell, :inline => "echo \"America/New_York\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
+
+    # install puppet for oracle installation
+    config.vm.provision :shell, :inline => "apt-get -y install puppet"
+
+    # configure oracle
+    config.vm.provision :puppet do |puppet|
+      puppet.manifests_path = 'puppet/manifests'
+      puppet.manifest_file = 'base.pp'
+      puppet.module_path = 'puppet/modules'
+      puppet.options = '--verbose --trac'
+    end
+
+    # install oci8.so extension
+    config.vm.provision "shell" do |s|
+      s.path = "./scripts/install-oci8.sh"
     end
 
     # Configure Port Forwarding To The Box
@@ -31,7 +53,7 @@ class Homestead
     config.vm.network "forwarded_port", guest: 443, host: 44300
     config.vm.network "forwarded_port", guest: 3306, host: 33060
     config.vm.network "forwarded_port", guest: 5432, host: 54320
-    config.vm.network "forwarded_port", guest: 1521, host: 1521
+    config.vm.network "forwarded_port", guest: 1521, host: 15210
 
     # Add Custom Ports From Configuration
     if settings.has_key?("ports")
