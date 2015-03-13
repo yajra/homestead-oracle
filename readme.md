@@ -38,7 +38,7 @@ This project was created based on the information in the following projects:
 ## Oracle Default Accounts
 - sys / secret
 - system / secret
-- hr / hr
+- homestead / secret
 
 ## Connecting to Oracle
 
