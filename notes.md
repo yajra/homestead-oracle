@@ -1,15 +1,15 @@
 # INSTALLATION / SETUP NOTES / QA
 
-##Problem:
+###Problem:
 	oci_connect() not found on CLI
-##Solution:
+###Solution:
 	add extension=oci8.so on /etc/php/cli/php.ini
 
 
-##Problem:
+###Problem:
 	Oracle Listener does not start on boot?
 
-##Solution:
+###Solution:
 	vi /etc/init.d/oracle-xe
 	go to line :556
 	update line:
@@ -17,13 +17,13 @@
 		to
 		status=`ps -ef | grep tns | grep oracle | grep xe`
 
-##Problem:
+###Problem:
 	Supervisord not working due to Oracle Environments
 
-##Solution:
+###Solution:
 	Manually add oracle environment path on your program
 ```
-[program:leadrm]
+[program:queue]
 command=php artisan queue:listen --tries=2 --env=homestead
 directory=/home/vagrant/www
 stdout_logfile=/home/vagrant/www/app/storage/logs/supervisord.log
