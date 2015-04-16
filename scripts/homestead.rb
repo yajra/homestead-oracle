@@ -1,5 +1,5 @@
 class Homestead
-  def Homestead.configure(config, settings)
+  def Homestead.configure(config, settings, hostsupdater)
     # Set The VM Provider
     ENV['VAGRANT_DEFAULT_PROVIDER'] = settings["provider"] ||= "virtualbox"
 
@@ -115,6 +115,15 @@ class Homestead
         s.path = "./scripts/create-oracle.sh"
         s.args = [db]
       end
+    end
+
+    # Add the aliases to the host machine
+    if hostsupdater
+      aliases = Array.new
+      settings["sites"].each do |site|
+        aliases.push(site["map"])
+      end
+      config.hostsupdater.aliases = aliases
     end
 
     # Configure All Of The Server Environment Variables
