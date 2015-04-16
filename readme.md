@@ -34,6 +34,8 @@ This project was created based on the information in the following projects:
 * Run `vagrant up` from the base directory of this project. The first time this will take a while -- up to 1 hour on
   my machine. Please note that building the VM involves downloading Laravel's Homestead [base box](https://atlas.hashicorp.com/laravel/boxes/homestead)
 
+## Vagrant Provision
+If you want to force re-provision the machine, I suggest running `vagrant provision --provision-with shell` for faster provisioning. This script will not include Oracle puppet scripts that takes more time to provision which is not necessary. Oracle puppet is required to only be executed once.
 
 ## Oracle Default Accounts
 - sys / secret
