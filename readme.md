@@ -26,7 +26,7 @@ This project was created based on the information in the following projects:
 
         vagrant plugin install vagrant-vbguest
 
-* Install [vagrant-hostupdater]: (optional)
+* Install [vagrant-hostupdater](https://github.com/cogitatio/vagrant-hostsupdater): (optional)
 
         vagrant plugin install vagrant-hostsupdater
 
