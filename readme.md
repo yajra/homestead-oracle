@@ -26,6 +26,10 @@ This project was created based on the information in the following projects:
 
         vagrant plugin install vagrant-vbguest
 
+* Install [vagrant-hostupdater]: (optional)
+
+        vagrant plugin install vagrant-hostsupdater
+
 * Download [Oracle Database 11g Express Edition] for Linux x64. Place the file
   `oracle-xe-11.2.0-1.0.x86_64.rpm.zip` in the directory `puppet/modules/oracle/files` of this
   project. (Alternatively, you could keep the zip file in some other location and make a hard link
