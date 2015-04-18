@@ -3,6 +3,12 @@ class Homestead
     # Set The VM Provider
     ENV['VAGRANT_DEFAULT_PROVIDER'] = settings["provider"] ||= "virtualbox"
 
+    # Configure Local Variable To Access Scripts From Remote Location
+    scriptDir = File.dirname(__FILE__)
+
+    # Prevent TTY Errors
+    config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+
     # Configure The Box
     config.vm.box = "laravel/homestead"
     config.vm.hostname = "homestead"
@@ -20,10 +26,14 @@ class Homestead
       vb.customize ["modifyvm", :id, "--ostype", "Ubuntu_64"]
     end
 
-    config.vm.provider "vmware_fusion" do |v|
-      v.name = 'homestead-oracle'
-      v.memory = settings["memory"] ||= "2048"
-      v.cpus = settings["cpus"] ||= "1"
+    # Configure A Few VMware Settings
+    ["vmware_fusion", "vmware_workstation"].each do |vmware|
+      config.vm.provider vmware do |v|
+        v.vmx["displayName"] = "homestead"
+        v.vmx["memsize"] = settings["memory"] ||= 2048
+        v.vmx["numvcpus"] = settings["cpus"] ||= 1
+        v.vmx["guestOS"] = "ubuntu-64"
+      end
     end
 
     # enable/disable vbguest update
@@ -82,19 +92,22 @@ class Homestead
     end
 
     # Register All Of The Configured Shared Folders
-    settings["folders"].each do |folder|
-      config.vm.synced_folder folder["map"], folder["to"], type: folder["type"] ||= nil
+    if settings.include? 'folders'
+      settings["folders"].each do |folder|
+        mount_opts = folder["type"] == "nfs" ? ['actimeo=1'] : []
+        config.vm.synced_folder folder["map"], folder["to"], type: folder["type"] ||= nil, mount_options: mount_opts
+      end
     end
 
     # Install All The Configured Nginx Sites
     settings["sites"].each do |site|
       config.vm.provision "shell" do |s|
           if (site.has_key?("hhvm") && site["hhvm"])
-            s.inline = "bash /vagrant/scripts/serve-hhvm.sh $1 \"$2\" $3"
-            s.args = [site["map"], site["to"], site["port"] ||= "80"]
+            s.path = scriptDir + "/serve-hhvm.sh"
+            s.args = [site["map"], site["to"], site["port"] ||= "80", site["ssl"] ||= "443"]
           else
-            s.inline = "bash /vagrant/scripts/serve.sh $1 \"$2\" $3"
-            s.args = [site["map"], site["to"], site["port"] ||= "80"]
+            s.path = scriptDir + "/serve.sh"
+            s.args = [site["map"], site["to"], site["port"] ||= "80", site["ssl"] ||= "443"]
           end
       end
     end
@@ -102,17 +115,17 @@ class Homestead
     # Configure All Of The Configured Databases
     settings["databases"].each do |db|
       config.vm.provision "shell" do |s|
-        s.path = "./scripts/create-mysql.sh"
+        s.path = scriptDir + "/create-mysql.sh"
         s.args = [db]
       end
 
       config.vm.provision "shell" do |s|
-        s.path = "./scripts/create-postgres.sh"
+        s.path = scriptDir + "/create-postgres.sh"
         s.args = [db]
       end
 
       config.vm.provision "shell" do |s|
-        s.path = "./scripts/create-oracle.sh"
+        s.path = scriptDir + "/create-oracle.sh"
         s.args = [db]
       end
     end
@@ -153,8 +166,13 @@ class Homestead
     # Configure Blackfire.io
     if settings.has_key?("blackfire")
       config.vm.provision "shell" do |s|
-        s.path = "./scripts/blackfire.sh"
-        s.args = [settings["blackfire"][0]["id"], settings["blackfire"][0]["token"]]
+        s.path = scriptDir + "/blackfire.sh"
+        s.args = [
+          settings["blackfire"][0]["id"],
+          settings["blackfire"][0]["token"],
+          settings["blackfire"][0]["client-id"],
+          settings["blackfire"][0]["client-token"]
+        ]
       end
     end
   end
