@@ -10,12 +10,12 @@ keys:
     - ~/.ssh/id_rsa
 
 folders:
-    - map: /www
-      to: /home/vagrant/www
+    - map: ~/Code
+      to: /home/vagrant/Code
 
 sites:
     - map: homestead.app
-      to: /home/vagrant/www
+      to: /home/vagrant/Code/Laravel/public
 
 databases:
     - homestead
@@ -27,3 +27,5 @@ variables:
 # blackfire:
 #     - id: foo
 #       token: bar
+#       client-id: foo
+#       client-token: bar
