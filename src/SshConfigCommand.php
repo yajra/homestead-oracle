@@ -6,7 +6,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SshCommand extends Command
+class SshConfigCommand extends Command
 {
     /**
      * Configure the command options.
@@ -15,7 +15,7 @@ class SshCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('ssh')->setDescription('Login to the Homestead machine via SSH');
+        $this->setName('ssh-config')->setDescription('Outputs OpenSSH valid configuration to connect to Homestead');
     }
 
     /**
@@ -29,10 +29,15 @@ class SshCommand extends Command
     {
         chdir(__DIR__.'/../');
 
-        passthru($this->setEnvironmentCommand().' vagrant ssh');
+        passthru($this->setDotFileInEnvironment().' vagrant ssh-config');
     }
 
-    protected function setEnvironmentCommand()
+    /**
+     * Set the dot file path in the environment.
+     *
+     * @return void
+     */
+    protected function setDotFileInEnvironment()
     {
         if ($this->isWindows()) {
             return 'SET VAGRANT_DOTFILE_PATH='.$_ENV['VAGRANT_DOTFILE_PATH'].' &&';
@@ -41,6 +46,11 @@ class SshCommand extends Command
         return 'VAGRANT_DOTFILE_PATH="'.$_ENV['VAGRANT_DOTFILE_PATH'].'"';
     }
 
+    /**
+     * Determine if the machine is running the Windows operating system.
+     *
+     * @return bool
+     */
     protected function isWindows()
     {
         return strpos(strtoupper(PHP_OS), 'WIN') === 0;

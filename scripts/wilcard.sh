@@ -1,0 +1,2 @@
+sudo openssl req -new -x509 -keyout cert.pem -out cert.pem -days 365 -nodes -subj '/C=US/ST=New York/L=New York/O=End Point/OU=Hosting Team/CN=leadrm.app emailAddress=aqangeles@gmail.com/ subjectAltName=DNS.1=leadrm.app, DNS.2=*.leadrm.app'
+sudo openssl req -new -x509 -keyout cert.pem -out cert.pem -days 365 -nodes
