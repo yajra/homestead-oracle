@@ -25,7 +25,7 @@ class Homestead
 
     # Configure A Few VirtualBox Settings
     config.vm.provider "virtualbox" do |vb|
-      vb.name = 'homestead-oracle'
+      vb.name = 'homestead'
       vb.customize ["modifyvm", :id, "--memory", settings["memory"] ||= "2048"]
       vb.customize ["modifyvm", :id, "--cpus", settings["cpus"] ||= "1"]
       vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
@@ -36,7 +36,7 @@ class Homestead
     # Configure A Few VMware Settings
     ["vmware_fusion", "vmware_workstation"].each do |vmware|
       config.vm.provider vmware do |v|
-        v.vmx["displayName"] = "homestead-oracle"
+        v.vmx["displayName"] = "homestead"
         v.vmx["memsize"] = settings["memory"] ||= 2048
         v.vmx["numvcpus"] = settings["cpus"] ||= 1
         v.vmx["guestOS"] = "ubuntu-64"
@@ -66,11 +66,6 @@ class Homestead
       puppet.manifest_file = 'base.pp'
       puppet.module_path = 'puppet/modules'
       puppet.options = '--verbose --trac'
-    end
-
-    # install oci8.so extension
-    config.vm.provision "shell" do |s|
-      s.path = "./scripts/install-oci8.sh"
     end
 
     # Standardize Ports Naming Schema
@@ -193,6 +188,11 @@ class Homestead
     # Configure All Of The Server Environment Variables
     config.vm.provision "shell" do |s|
         s.path = scriptDir + "/clear-variables.sh"
+    end
+
+    # install oci8.so extension
+    config.vm.provision "shell" do |s|
+      s.path = "./scripts/install-oci8.sh"
     end
 
     if settings.has_key?("variables")
