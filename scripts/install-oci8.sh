@@ -8,8 +8,9 @@ else
 	./configure
 	make
 	sudo make install
-	echo 'extension=oci8.so' >> /etc/php/7.0/fpm/php.ini
-	echo 'extension=oci8.so' >> /etc/php/7.0/cli/php.ini
+	echo 'extension=oci8.so' > /etc/php/mods-available/oci8.ini
+	ln -nfs /etc/php/mods-available/oci8.ini /etc/php/7.0/cli/conf.d/20-oci8.ini
+	ln -nfs /etc/php/mods-available/oci8.ini /etc/php/7.0/fpm/conf.d/20-oci8.ini
 fi
 
 if cat /etc/php/7.0/fpm/php-fpm.conf | grep ORACLE_HOME; then
