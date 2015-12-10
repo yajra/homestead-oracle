@@ -5,7 +5,7 @@ class oracle::server {
   }
 
   package {
-    ["puppet-common", "alien", "bc", "libaio1", "unixodbc", "unzip", "rlwrap", "dos2unix"]:
+    ["puppet-common", "alien", "bc", "libaio1", "unixodbc", "unzip", "rlwrap", "dos2unix", "php-pear"]:
       ensure => installed;
   }
 
