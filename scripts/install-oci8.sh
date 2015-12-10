@@ -1,7 +1,13 @@
 if php -m | grep oci8; then
 	echo 'oracle extension already installed!'
 else
-	echo autodetect | pecl install oci8
+	cd /tmp/
+	git clone https://github.com/yajra/ext-oci8.git
+	cd ext-oci8/
+	phpize
+	./configure
+	make
+	sudo make install
 	echo 'extension=oci8.so' >> /etc/php/7.0/fpm/php.ini
 	echo 'extension=oci8.so' >> /etc/php/7.0/cli/php.ini
 fi
