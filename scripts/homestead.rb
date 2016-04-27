@@ -51,16 +51,19 @@ class Homestead
       v.cpus = settings["cpus"] ||= 1
     end
 
-    # enable/disable vbguest update
+    # Enable/disable vbguest update
     config.vbguest.auto_update = false
 
-    # set date/time
+    # Set date/time
     config.vm.provision :shell, :inline => "echo \"America/New_York\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
 
-    # install puppet for oracle installation
+    # Fix Error: Failed to fetch http://ppa.launchpad.net/ondrej/php-7.0/ubuntu/dists/trusty/main/binary-i386/Packages
+    config.vm.provision :shell, :inline => scriptDir + "/fix-ppa-php.sh"
+
+    # Install puppet for oracle installation
     config.vm.provision :shell, :inline => "apt-get -y install puppet"
 
-    # configure oracle
+    # Configure oracle
     config.vm.provision :puppet do |puppet|
       puppet.manifests_path = 'puppet/manifests'
       puppet.manifest_file = 'base.pp'
