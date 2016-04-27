@@ -11,12 +11,12 @@ block="server {
     server_name $1;
     root \"$2\";
 
-    index index.html index.htm index.php app.php;
+    index index.html index.htm index.php app_dev.php;
 
     charset utf-8;
 
     location / {
-        try_files \$uri \$uri/ /app.php?\$query_string;
+        try_files \$uri \$uri/ /app_dev.php?\$query_string;
     }
 
     location = /favicon.ico { access_log off; log_not_found off; }
@@ -30,7 +30,7 @@ block="server {
     client_max_body_size 100m;
 
     # DEV
-    location ~ ^/(app_dev|config)\.php(/|\$) {
+    location ~ ^/(app_dev|app_test|config)\.php(/|\$) {
         fastcgi_split_path_info ^(.+\.php)(/.+)\$;
         fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
         include fastcgi_params;
