@@ -3,16 +3,59 @@ alias ...="cd ../.."
 
 alias h='cd ~'
 alias c='clear'
+alias artisan='php artisan'
+alias migrate='php artisan migrate'
+alias rollback='php artisan migrate:rollback'
+alias refresh='php artisan migrate:refresh --seed'
+alias dump='composer dump-autoload'
 
-function serve() {
-	if [[ "$1" && "$2" ]]
-	then
-		sudo dos2unix /vagrant/scripts/serve.sh
-		sudo bash /vagrant/scripts/serve.sh "$1" "$2"
-	else
-		echo "Error: missing required parameters."
-		echo "Usage: "
-		echo "  serve domain path"
-	fi
+alias phpspec='vendor/bin/phpspec'
+alias phpunit='vendor/bin/phpunit'
+alias serve=serve-laravel
+
+function migrate-seed() {
+    if [[ "$1" ]]
+    then
+        bash /vagrant/scripts/create-oracle.sh "$1" && php artisan migrate --seed
+    else
+        echo "Error: missing required parameters."
+        echo "Usage: "
+        echo "  migrate-seed database"
+    fi
 }
 
+function serve-laravel() {
+    if [[ "$1" && "$2" ]]
+    then
+        sudo dos2unix /vagrant/scripts/serve-laravel.sh
+        sudo bash /vagrant/scripts/serve-laravel.sh "$1" "$2" 80
+    else
+        echo "Error: missing required parameters."
+        echo "Usage: "
+        echo "  serve domain path"
+    fi
+}
+
+function serve-laravel() {
+    if [[ "$1" && "$2" ]]
+    then
+        sudo dos2unix /vagrant/scripts/serve-laravel.sh
+        sudo bash /vagrant/scripts/serve-laravel.sh "$1" "$2" 80
+    else
+        echo "Error: missing required parameters."
+        echo "Usage: "
+        echo "  serve domain path"
+    fi
+}
+
+function serve-hhvm() {
+    if [[ "$1" && "$2" ]]
+    then
+        sudo dos2unix /vagrant/scripts/serve-hhvm.sh
+        sudo bash /vagrant/scripts/serve-hhvm.sh "$1" "$2" 80
+    else
+        echo "Error: missing required parameters."
+        echo "Usage: "
+        echo "  serve-hhvm domain path"
+    fi
+}

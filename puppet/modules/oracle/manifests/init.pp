@@ -5,7 +5,7 @@ class oracle::server {
   }
 
   package {
-    ["puppet-common", "alien", "bc", "libaio1", "unixodbc", "unzip", "rlwrap", "dos2unix"]:
+    ["puppet-common", "alien", "bc", "libaio1", "unixodbc", "unzip", "rlwrap", "dos2unix", "php-pear"]:
       ensure => installed;
   }
 
@@ -16,13 +16,13 @@ class oracle::server {
 
   file {
     "/tmp/chkconfig":
-      mode => 0755,
+      mode => "0755",
       source => "puppet:///modules/oracle/chkconfig";
     "/tmp/60-oracle.conf":
       notify => Exec['procps'],
       source => "puppet:///modules/oracle/60-oracle.conf";
     "/tmp/S01shm_load":
-      mode => 0755,
+      mode => "0755",
       source => "puppet:///modules/oracle/S01shm_load";
   }
 
@@ -89,7 +89,7 @@ class oracle::swap {
 
   file {
     "/swapfile":
-      mode => 600,
+      mode => "600",
       owner => root,
       group => root,
       require => Exec['create swapfile'];
