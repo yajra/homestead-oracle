@@ -58,7 +58,8 @@ class Homestead
     config.vm.provision :shell, :inline => "echo \"America/New_York\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
 
     # Fix Error: Failed to fetch http://ppa.launchpad.net/ondrej/php-7.0/ubuntu/dists/trusty/main/binary-i386/Packages
-    config.vm.provision :shell, :inline => scriptDir + "/fix-ppa-php.sh"
+    config.vm.provision :shell, :inline => "sudo rm /etc/apt/sources.list.d/ondrej-php-*"
+    config.vm.provision :shell, :inline => "sudo add-apt-repository ppa:ondrej/php"
 
     # Install puppet for oracle installation
     config.vm.provision :shell, :inline => "apt-get -y install puppet"
