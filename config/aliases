@@ -6,12 +6,18 @@ alias c='clear'
 alias artisan='php artisan'
 alias migrate='php artisan migrate'
 alias rollback='php artisan migrate:rollback'
-alias refresh='php artisan migrate:refresh --seed'
 alias dump='composer dump-autoload'
 
 alias phpspec='vendor/bin/phpspec'
 alias phpunit='vendor/bin/phpunit'
 alias serve=serve-laravel
+
+function refresh() {
+    composer dump-autoload
+    php artisan migrate:refresh --seed
+    php artisan cache:clear
+    php artisan view:clear
+}
 
 function migrate-seed() {
     if [[ "$1" ]]
